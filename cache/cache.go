@@ -2,7 +2,7 @@ package cache
 
 import (
 	"fmt"
-	"gogo/hash"
+	"github.com/soloslee/gogo/hash"
 	"sync"
 	"time"
 )

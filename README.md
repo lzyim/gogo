@@ -13,7 +13,7 @@ go get github.com/soloslee/gogo
 ```go
 import (
     "fmt"
-    "github.com/soloslee/gogo"
+    "github.com/soloslee/gogo/cache"
 )
 
 func main() {
