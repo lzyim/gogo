@@ -26,7 +26,7 @@ func main() {
     // Set the value of the key "mykey" to 42, with no expiration time
     // (the item won't be removed until it is re-set, or removed using
     // c.Del("mykey")
-    c.Set("mykey", 42, gogo.NoExpiration)
+    c.Set("mykey", 42, cache.NoExpiration)
 
     // Get the value of key "mykey"
     value, found := c.Get("mykey")

@@ -8,14 +8,14 @@ import (
 )
 
 const (
-	NoExpiration time.Duration = -1
+	NoExpiration int64 = -1
 )
 
 type goStruct struct {
 	key    string
 	value  interface{}
 	expire int64
-	mux    sync.Mutex
+	mux    sync.RWMutex
 }
 
 type dLinkList struct {
@@ -35,8 +35,8 @@ func newDLinkList(key string, value interface{}, expire int64) *dLinkList {
 }
 
 func (gs *goStruct) getVal() interface{} {
-	gs.mux.Lock()
-	defer gs.mux.Unlock()
+	gs.mux.RLock()
+	defer gs.mux.RUnlock()
 	return gs.value
 }
 
