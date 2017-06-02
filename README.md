@@ -23,7 +23,7 @@ func main() {
     // If key already holds a value, it is overwritten, regardless of its type.
     c.Set("key", "hello", 10)
 
-    // Set the value of the key "mykey" to 42, with no expiration time
+    // Set the value of the key "mykey" to 42, with no expiration time.
     // (the item won't be removed until it is re-set, or removed using
     // c.Del("mykey")
     c.Set("mykey", 42, cache.NoExpiration)
@@ -34,16 +34,20 @@ func main() {
         fmt.Println(value)
     }
 
-    // Increments the number stored at key "mykey" by ten
+    // Increments the number stored at key "mykey" by ten.
     c.Incr("mykey", 10)
 
-    // Decrements the number stored at key "mykey" by one
+    // Decrements the number stored at key "mykey" by one.
     c.Decr("mykey", 1)
 
-    // Returns the number of items in the cache
+    // Get the expiration time of key "mykey".
+    // The method returns -1 if the key exists but has no associated expire.
+    expiration, found = c.TTL("mykey")
+
+    // Returns the number of items in the cache.
     number := c.Count()
 
-    // Delete all items from the cache
+    // Delete all items from the cache.
     c.Flush()
 }
 ```

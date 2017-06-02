@@ -212,6 +212,37 @@ func (h *hashTable) Get(key string) (interface{}, bool) {
 	}
 }
 
+func (h *hashTable) TTL(key string) (int64, bool) {
+    index := hash.HashStr(key)
+    list := h.arHash[index]
+    found := false
+    if list == nil {
+        return 0, false
+    } else {
+        for ; ; list = list.next {
+            if list.data.key == key {
+                found = true
+                break
+            }
+            if list.next == nil {
+                break
+            }
+        }
+        if found {
+            _, exp := list.data.getVal()
+            if exp < 0 {
+                return -1, true
+            }
+            if time.Now().Unix() > exp {
+                h.Del(key)
+                return 0, false
+            }
+            return exp, true
+        }
+        return 0, false
+    }
+}
+
 func (h *hashTable) Del(key string) {
 	index := hash.HashStr(key)
 	if h.arHash[index] == nil {
