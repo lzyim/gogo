@@ -34,10 +34,10 @@ func newDLinkList(key string, value interface{}, expire int64) *dLinkList {
 	return &dLinkList{gs, nil, nil}
 }
 
-func (gs *goStruct) getVal() interface{} {
+func (gs *goStruct) getVal() (interface{}, int64) {
 	gs.mux.RLock()
 	defer gs.mux.RUnlock()
-	return gs.value
+	return gs.value, gs.expire
 }
 
 func (gs *goStruct) setVal(value interface{}) {
@@ -153,7 +153,7 @@ func (h *hashTable) Set(key string, value interface{}, second int64) {
 	index := hash.HashStr(key)
 	var expire int64
 	if second == -1 {
-		expire = 0
+		expire = -1
 	} else {
 		expire = second + time.Now().Unix()
 	}
@@ -198,14 +198,15 @@ func (h *hashTable) Get(key string) (interface{}, bool) {
 			}
 		}
 		if found {
-			if list.data.expire == 0 {
-				return list.data.getVal(), true
+			val, exp := list.data.getVal()
+			if exp < 0 {
+				return val, true
 			}
-			if time.Now().Unix() > list.data.expire {
+			if time.Now().Unix() > exp {
 				h.Del(key)
 				return nil, false
 			}
-			return list.data.getVal(), true
+			return val, true
 		}
 		return nil, false
 	}
